@@ -4,21 +4,9 @@ ModbusMaster node;
 PZEMData pzemInput = {0, 0, 0, 0, false};
 PZEMData pzemOutput = {0, 0, 0, 0, false};
 
-static void preTransmission() {
-  digitalWrite(PIN_RS485_DE, HIGH);
-}
-
-static void postTransmission() {
-  digitalWrite(PIN_RS485_DE, LOW);
-}
-
 void initModbus() {
   Serial2.begin(PZEM_BAUD, SERIAL_8N1, PIN_RS485_RO, PIN_RS485_DI);
-  pinMode(PIN_RS485_DE, OUTPUT);
-  digitalWrite(PIN_RS485_DE, LOW);
-
-  node.preTransmission(preTransmission);
-  node.postTransmission(postTransmission);
+  // MAX485 auto direction — tidak perlu preTransmission/postTransmission
 }
 
 void readPZEM(uint8_t addr, PZEMData &data) {

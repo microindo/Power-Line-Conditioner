@@ -9,6 +9,5 @@ extern PZEMData pzemOutput;
 
 void initModbus();
 void readPZEM(uint8_t addr, PZEMData &data);
-void setPZEMAddress(uint8_t oldAddr, uint8_t newAddr);
 
 #endif

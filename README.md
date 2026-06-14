@@ -93,9 +93,9 @@ Dibuat oleh: [microindo](https://github.com/microindo)
                     +-------+--------+
                     |     ESP32       |
                     |                 |
-                    |  GPIO16 <-------> RO MAX485
-                    |  GPIO17 <-------> DI MAX485
-                    |  GPIO4  <-------> DE/RE MAX485
+                     |  GPIO16 <-------> RXD MAX485
+                     |  GPIO17 <-------> TXD MAX485
+                     |  (auto direction — 4 pin saja)
                     |                 |
                     |  GPIO26 --------> Relay 1
                     |  GPIO27 --------> Relay 2
@@ -121,18 +121,18 @@ Dibuat oleh: [microindo](https://github.com/microindo)
 
 ### Wiring Detail
 
-#### MAX485 ke ESP32
+#### MAX485 (Auto Direction) ke ESP32
 
 | MAX485 | ESP32 |
 |--------|-------|
-| RO (Receiver Out) | GPIO16 (UART2 RX) |
-| DI (Driver Input) | GPIO17 (UART2 TX) |
-| DE (Driver Enable) | GPIO4 (gabung dengan RE) |
-| RE (Receiver Enable) | GPIO4 (gabung dengan DE) |
+| RXD (Receive) | GPIO16 (UART2 RX) |
+| TXD (Transmit) | GPIO17 (UART2 TX) |
 | VCC | 5V |
 | GND | GND |
 | A (RS485+) | PZEM-017 (A) |
 | B (RS485-) | PZEM-017 (B) |
+
+> **Catatan:** Modul MAX485 auto direction control hanya memiliki **4 pin TTL** (VCC, GND, TXD, RXD). Tidak perlu pin DE/RE. Modul otomatis mengalihkan arah transmit/receive secara hardware.
 
 #### Relay ke ESP32
 
@@ -795,7 +795,7 @@ ESP32 akan menyimpan dan menggunakan delay 3 detik.
 | | Board salah | Pilih ESP32 Dev Module |
 | PZEM data tidak terbaca | Kabel A/B terbalik | Tukar kabel A dan B |
 | | Alamat salah | Cek alamat Modbus (harus 0x01 dan 0x02) |
-| | MAX485 tidak aktif | Pastikan DE/RE terhubung ke GPIO4 |
+| | MAX485 tidak aktif | Pastikan VCC/GND terhubung dengan benar |
 | | Power PZEM mati | PZEM-017 butuh power 12V DC |
 | Relay tidak menyala | Relay active LOW | Program sudah handle, cek wiring VCC/GND |
 | | Power relay kurang | Relay 5V butuh supply terpisah |
@@ -881,7 +881,7 @@ MQTT Callback (async)
 | `initRelay()` | relay_handler.cpp | Set pin mode relay sebagai OUTPUT, kontaktor sebagai INPUT_PULLUP |
 | `setRelay(idx, state)` | relay_handler.cpp | Set relay ON/OFF (dengan proteksi index out of range) |
 | `readKontaktor()` | relay_handler.cpp | Baca 4 input kontaktor dengan software debounce 50ms |
-| `initModbus()` | modbus_handler.cpp | Inisialisasi Serial2 dan pin DE/RE MAX485 |
+| `initModbus()` | modbus_handler.cpp | Inisialisasi Serial2 untuk MAX485 (auto direction) |
 | `readPZEM(addr, &data)` | modbus_handler.cpp | Baca register tegangan, arus, daya, energi via Modbus |
 | `initMQTT()` | mqtt_handler.cpp | Konek WiFi, set MQTT server, subscribe topik |
 | `mqttLoop()` | mqtt_handler.cpp | Maintain koneksi, publish data periodik, heartbeat |

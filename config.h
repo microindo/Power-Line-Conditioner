@@ -4,7 +4,7 @@
 // ===== Pin Assignments =====
 #define PIN_RS485_RO   16   // UART2 RX ke MAX485 RO
 #define PIN_RS485_DI   17   // UART2 TX ke MAX485 DI
-#define PIN_RS485_DE   4    // MAX485 DE & RE (gabung)
+// MAX485 auto direction control (4 pin: VCC GND TXD RXD) — tidak perlu DE/RE
 #define PIN_RELAY_1    26
 #define PIN_RELAY_2    27
 #define PIN_RELAY_3    32
