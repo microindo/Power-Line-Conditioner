@@ -15,7 +15,7 @@
 #define PIN_KONTAKTOR_4 39
 #define PIN_LED        2
 
-// ===== PZEM-017 Addresses =====
+// ===== PZEM-016 Addresses (AC Energy Meter) =====
 #define PZEM_ADDR_INPUT   0x01
 #define PZEM_ADDR_OUTPUT  0x02
 #define PZEM_BAUD         9600
@@ -26,13 +26,15 @@
 #define HEARTBEAT_INTERVAL   300000  // 5 menit
 #define WDT_TIMEOUT          10      // detik
 
-// ===== Modbus Register Addresses (PZEM-017) =====
+// ===== Modbus Register Addresses (PZEM-016) =====
+// Register map: 0x0000 Voltage, 0x0001 Current, 0x0002 Power,
+//               0x0003-0x0004 Energy, 0x0005 Frequency, 0x0006 Power Factor
 #define REG_VOLTAGE    0x0000
 #define REG_CURRENT    0x0001
 #define REG_POWER      0x0002
 #define REG_ENERGY     0x0003
-#define REG_HIGH_ALARM 0x0005
-#define REG_LOW_ALARM  0x0006
+#define REG_FREQ       0x0005
+#define REG_PF         0x0006
 
 // ===== PZEM Data Structure =====
 struct PZEMData {
@@ -40,6 +42,8 @@ struct PZEMData {
   float current;
   float power;
   float energy;
+  float frequency;
+  float powerFactor;
   bool valid;
 };
 

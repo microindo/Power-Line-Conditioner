@@ -2,7 +2,7 @@
 title: |
   \textbf{\huge Power Line Conditioner}\\
   \large Panduan Instalasi, Konfigurasi \& Uji Coba
-subtitle: ESP32 + PZEM-017 + MQTT
+subtitle: ESP32 + PZEM-016 + MQTT
 author: microindo
 date: Juni 2026
 toc: true
@@ -33,7 +33,7 @@ header-includes:
 
 **Power Line Conditioner** adalah sistem monitoring dan kontrol power line berbasis **ESP32** yang dilengkapi dengan:
 
-- 2 buah sensor **PZEM-017** (Modbus RS485) untuk pengukuran tegangan, arus, daya, dan energi di sisi input dan output.
+- 2 buah sensor **PZEM-016** (Modbus RS485) untuk pengukuran tegangan, arus, daya, dan energi di sisi input dan output.
 - 4 channel **relay output** untuk kontrol beban.
 - 4 input **kontaktor** untuk membaca status ON/OFF.
 - Komunikasi **MQTT** untuk integrasi IoT cloud.
@@ -77,7 +77,7 @@ Dokumen ini bertujuan sebagai panduan lengkap mulai dari:
 | No | Komponen | Spesifikasi | Jumlah |
 |----|----------|-------------|--------|
 | 1 | ESP32 Board | DOIT ESP32 DEVKIT V1 | 1 |
-| 2 | PZEM-017 | DC Energy Meter Modbus | 2 |
+| 2 | PZEM-016 | DC Energy Meter Modbus | 2 |
 | 3 | MAX485 | RS485 to TTL (auto direction) | 1 |
 | 4 | Relay Module | 4-Channel 5V Active LOW | 1 |
 | 5 | Power Supply 5V | 5V / 2A untuk ESP32 | 1 |
@@ -125,8 +125,8 @@ Dokumen ini bertujuan sebagai panduan lengkap mulai dari:
 | TXD | GPIO17 (UART2 TX) | Putih |
 | VCC | 5V | Merah |
 | GND | GND | Hitam |
-| A (RS485+) | PZEM-017 (A) | Biru |
-| B (RS485-) | PZEM-017 (B) | Kuning |
+| A (RS485+) | PZEM-016 (A) | Biru |
+| B (RS485-) | PZEM-016 (B) | Kuning |
 
 CATATAN: Modul MAX485 auto direction hanya memiliki 4 pin TTL (VCC, GND, TXD, RXD). Tidak perlu pin kontrol DE/RE.
 
@@ -149,11 +149,11 @@ CATATAN: Modul MAX485 auto direction hanya memiliki 4 pin TTL (VCC, GND, TXD, RX
 | Kaki 1 | 10 k$\Omega$ ke GND (pull-down) |
 | Kaki 2 | 3.3V |
 
-### PZEM-017 ke Bus RS485
+### PZEM-016 ke Bus RS485
 
-Kedua PZEM-017 terhubung secara paralel ke bus RS485 yang sama:
+Kedua PZEM-016 terhubung secara paralel ke bus RS485 yang sama:
 
-| PZEM-017 | MAX485 |
+| PZEM-016 | MAX485 |
 |----------|--------|
 | A (+) | A (+) |
 | B (-) | B (-) |
@@ -206,11 +206,11 @@ Atau download ZIP dari halaman GitHub (Code > Download ZIP), ekstrak, lalu buka 
 
 \newpage
 
-# Konfigurasi PZEM-017
+# Konfigurasi PZEM-016
 
 ## Mengubah Alamat Modbus
 
-PZEM-017 memiliki alamat default \texttt{0x01}. Untuk menggunakan 2 unit, alamat salah satu harus diubah menjadi \texttt{0x02}.
+PZEM-016 memiliki alamat default \texttt{0x01}. Untuk menggunakan 2 unit, alamat salah satu harus diubah menjadi \texttt{0x02}.
 
 ### Metode: Menggunakan ESP32
 
@@ -244,7 +244,7 @@ void loop() {}
 
 CATATAN:
 
-- Lepas PZEM-017 kedua dari bus saat melakukan perubahan
+- Lepas PZEM-016 kedua dari bus saat melakukan perubahan
 - Beri label fisik pada modul yang sudah diubah
 - Setelah selesai, upload ulang program utama
 
@@ -494,11 +494,11 @@ Perubahan konfigurasi via MQTT akan tersimpan otomatis ke NVS.
 
 **Kriteria Sukses:** Semua perintah merespon sesuai.
 
-## Tahap 3: Test PZEM-017
+## Tahap 3: Test PZEM-016
 
-**Tujuan:** Verifikasi komunikasi Modbus dengan kedua PZEM-017.
+**Tujuan:** Verifikasi komunikasi Modbus dengan kedua PZEM-016.
 
-**Prasyarat:** MAX485 terhubung ke kedua PZEM-017, PZEM mendapat power 12V.
+**Prasyarat:** MAX485 terhubung ke kedua PZEM-016, PZEM mendapat power 12V.
 
 1. Buka Serial Monitor
 2. Ketik `STATUS`
@@ -511,7 +511,7 @@ Perubahan konfigurasi via MQTT akan tersimpan otomatis ke NVS.
 **Jika gagal (tidak terhubung):**
 - Periksa kabel A/B (jika terbalik, tukar)
 - Periksa alamat Modbus (harus 0x01 dan 0x02)
-- Pastikan power PZEM-017 aktif (12V)
+- Pastikan power PZEM-016 aktif (12V)
 - Pastikan MAX485 terhubung ke GPIO16 (RXD) dan GPIO17 (TXD)
 
 **Kriteria Sukses:** Kedua PZEM menampilkan data yang valid.
@@ -778,7 +778,7 @@ Kirim perintah ke topik konfigurasi (dapat dikembangkan sesuai kebutuhan).
 ## Yang Tidak Dilakukan
 
 - Tidak mengubah firmware (tidak perlu upload ulang)
-- Tidak mengubah alamat PZEM-017 (tetap 0x01 dan 0x02)
+- Tidak mengubah alamat PZEM-016 (tetap 0x01 dan 0x02)
 - Tidak mengubah pin assignment (hardware tetap sama)
 
 ## Perbandingan RESET vs RESET FACTORY
@@ -802,7 +802,7 @@ Power Line Conditioner/
 ├── config.h                     # Pin definitions, konstanta
 ├── storage.h / storage.cpp      # Baca/tulis NVS Preferences
 ├── relay_handler.h / .cpp       # Kontrol relay & kontaktor
-├── modbus_handler.h / .cpp      # Komunikasi Modbus PZEM-017
+├── modbus_handler.h / .cpp      # Komunikasi Modbus PZEM-016
 ├── mqtt_handler.h / .cpp        # MQTT client
 ├── serial_handler.h / .cpp      # Serial command parser
 ├── README.md                    # Dokumentasi
@@ -824,7 +824,7 @@ Power Line Conditioner/
 - Dokumentasi ESP32 Arduino: \url{https://docs.espressif.com/projects/arduino-esp32/}
 - Dokumentasi Blynk: \url{https://docs.blynk.io/}
 - Modbus Protocol: \url{https://modbus.org/docs/Modbus_Application_Protocol_V1_1b3.pdf}
-- PZEM-017 Datasheet: \url{https://www.youtu.be/peacefair-pzem-017}
+- PZEM-016 Datasheet: \url{https://www.youtu.be/peacefair-pzem-016}
 
 ## D. Riwayat Versi
 

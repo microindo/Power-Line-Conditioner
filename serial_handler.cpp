@@ -45,7 +45,9 @@ void processSerial() {
           Serial.print(pzemInput.voltage); Serial.print("V ");
           Serial.print(pzemInput.current); Serial.print("A ");
           Serial.print(pzemInput.power); Serial.print("W ");
-          Serial.print(pzemInput.energy); Serial.println("Wh");
+          Serial.print(pzemInput.energy); Serial.print("Wh ");
+          Serial.print(pzemInput.frequency); Serial.print("Hz ");
+          Serial.print(pzemInput.powerFactor); Serial.println("PF");
         } else {
           Serial.println("(tidak terhubung)");
         }
@@ -54,7 +56,9 @@ void processSerial() {
           Serial.print(pzemOutput.voltage); Serial.print("V ");
           Serial.print(pzemOutput.current); Serial.print("A ");
           Serial.print(pzemOutput.power); Serial.print("W ");
-          Serial.print(pzemOutput.energy); Serial.println("Wh");
+          Serial.print(pzemOutput.energy); Serial.print("Wh ");
+          Serial.print(pzemOutput.frequency); Serial.print("Hz ");
+          Serial.print(pzemOutput.powerFactor); Serial.println("PF");
         } else {
           Serial.println("(tidak terhubung)");
         }

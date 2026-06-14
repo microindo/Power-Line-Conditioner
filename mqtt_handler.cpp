@@ -138,19 +138,23 @@ static void callback(char* topic, byte* payload, unsigned int length) {
 void publishData() {
   if (!client.connected()) return;
 
-  StaticJsonDocument<256> doc;
+  StaticJsonDocument<384> doc;
   doc["v_in"] = pzemInput.voltage;
   doc["i_in"] = pzemInput.current;
   doc["p_in"] = pzemInput.power;
   doc["e_in"] = pzemInput.energy;
+  doc["freq_in"] = pzemInput.frequency;
+  doc["pf_in"] = pzemInput.powerFactor;
   doc["v_out"] = pzemOutput.voltage;
   doc["i_out"] = pzemOutput.current;
   doc["p_out"] = pzemOutput.power;
   doc["e_out"] = pzemOutput.energy;
+  doc["freq_out"] = pzemOutput.frequency;
+  doc["pf_out"] = pzemOutput.powerFactor;
   doc["input_valid"] = pzemInput.valid;
   doc["output_valid"] = pzemOutput.valid;
 
-  char buffer[256];
+  char buffer[384];
   serializeJson(doc, buffer);
   client.publish("plc/data", buffer);
 }

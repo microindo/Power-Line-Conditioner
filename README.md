@@ -1,6 +1,6 @@
 # Power Line Conditioner
 
-Sistem monitoring dan kontrol power line menggunakan **ESP32** dengan **2 sensor PZEM-017** (input & output), **4 relay output**, dan **4 input kontaktor**. Komunikasi menggunakan **MQTT** untuk IoT cloud dan **Serial Monitor** untuk konfigurasi lokal.
+Sistem monitoring dan kontrol power line menggunakan **ESP32** dengan **2 sensor PZEM-016** (input & output), **4 relay output**, dan **4 input kontaktor**. Komunikasi menggunakan **MQTT** untuk IoT cloud dan **Serial Monitor** untuk konfigurasi lokal.
 
 Dibuat oleh: [microindo](https://github.com/microindo)
 
@@ -12,7 +12,7 @@ Dibuat oleh: [microindo](https://github.com/microindo)
 2. [Komponen & Alat](#komponen--alat)
 3. [Skema Rangkaian](#skema-rangkaian)
 4. [Instalasi Software](#instalasi-software)
-5. [Konfigurasi Alamat PZEM-017](#konfigurasi-alamat-pzem-017)
+5. [Konfigurasi Alamat PZEM-016](#konfigurasi-alamat-pzem-016)
 6. [Upload Program](#upload-program)
 7. [Konfigurasi Awal via Serial Monitor](#konfigurasi-awal-via-serial-monitor)
 8. [Daftar Perintah Serial](#daftar-perintah-serial)
@@ -28,7 +28,7 @@ Dibuat oleh: [microindo](https://github.com/microindo)
 
 | Fitur | Keterangan |
 |-------|-----------|
-| **2x PZEM-017** | Mengukur tegangan (V), arus (A), daya (W), energi (Wh) di sisi **input** dan **output** secara real-time. |
+| **2x PZEM-016** | Mengukur tegangan (V), arus (A), daya (W), energi (Wh) di sisi **input** dan **output** secara real-time. |
 | **4 Relay** | Kontrol 4 output relay independen via MQTT atau Serial Monitor. |
 | **4 Input Kontaktor** | Membaca status ON/OFF dari 4 kontaktor dengan **debouncing software 50ms**. |
 | **MQTT Cloud** | Kirim data periodik dan terima perintah kontrol via MQTT broker. |
@@ -48,7 +48,7 @@ Dibuat oleh: [microindo](https://github.com/microindo)
 | No | Komponen | Spesifikasi | Jumlah |
 |----|----------|-------------|--------|
 | 1 | ESP32 Board | DOIT ESP32 DEVKIT V1 / NodeMCU-32S | 1 |
-| 2 | PZEM-017 | DC Energy Meter (Modbus RTU) | 2 |
+| 2 | PZEM-016 | AC Energy Meter (Modbus RTU) | 2 |
 | 3 | MAX485 | RS485 to TTL Converter | 1 |
 | 4 | Relay Module | 4-Channel Relay 5V (Active LOW) | 1 |
 | 5 | Power Supply | 5V / 2A untuk ESP32 | 1 |
@@ -74,9 +74,9 @@ Dibuat oleh: [microindo](https://github.com/microindo)
 | Alat | Fungsi |
 |------|--------|
 | Multimeter digital | Verifikasi tegangan dan kontinuitas |
-| Power supply DC variabel | Simulasi beban untuk test PZEM-017 |
+| Power supply DC variabel | Simulasi beban untuk test PZEM-016 |
 | MQTT Client (MQTTX / Mosquitto) | Test publish & subscribe manual |
-| USB-to-RS485 Converter | Konfigurasi alamat PZEM-017 |
+| USB-to-RS485 Converter | Konfigurasi alamat PZEM-016 |
 
 ---
 
@@ -112,10 +112,10 @@ Dibuat oleh: [microindo](https://github.com/microindo)
                             |
                    +--------+---------+
                    |     MAX485        |
-                   |  A(+) ------> PZEM-017 Input (A)
-                   |  B(-) ------> PZEM-017 Input (B)
-                   |  A(+) ------> PZEM-017 Output (A)
-                   |  B(-) ------> PZEM-017 Output (B)
+                   |  A(+) ------> PZEM-016 Input (A)
+                   |  B(-) ------> PZEM-016 Input (B)
+                   |  A(+) ------> PZEM-016 Output (A)
+                   |  B(-) ------> PZEM-016 Output (B)
                    +------------------+
 ```
 
@@ -129,8 +129,8 @@ Dibuat oleh: [microindo](https://github.com/microindo)
 | TXD (Transmit) | GPIO17 (UART2 TX) |
 | VCC | 5V |
 | GND | GND |
-| A (RS485+) | PZEM-017 (A) |
-| B (RS485-) | PZEM-017 (B) |
+| A (RS485+) | PZEM-016 (A) |
+| B (RS485-) | PZEM-016 (B) |
 
 > **Catatan:** Modul MAX485 auto direction control hanya memiliki **4 pin TTL** (VCC, GND, TXD, RXD). Tidak perlu pin DE/RE. Modul otomatis mengalihkan arah transmit/receive secara hardware.
 
@@ -159,14 +159,14 @@ Dibuat oleh: [microindo](https://github.com/microindo)
 
 **Cara kerja:** Button ditekan → GPIO ke HIGH → kontaktor status ON.
 
-#### PZEM-017 ke MAX485 (RS485 Bus)
+#### PZEM-016 ke MAX485 (RS485 Bus)
 
-| PZEM-017 | MAX485 |
+| PZEM-016 | MAX485 |
 |----------|--------|
 | A (+) | A (+) |
 | B (-) | B (-) |
 
-Kedua PZEM-017 terhubung ke **bus RS485 yang sama** (paralel). Perbedaan alamat Modbus yang membedakan keduanya.
+Kedua PZEM-016 terhubung ke **bus RS485 yang sama** (paralel). Perbedaan alamat Modbus yang membedakan keduanya.
 
 ---
 
@@ -222,18 +222,18 @@ Buka folder hasil download, lalu buka file **Power_Line_Conditioner.ino** di Ard
 
 ---
 
-## Konfigurasi Alamat PZEM-017
+## Konfigurasi Alamat PZEM-016
 
-PZEM-017 memiliki alamat Modbus default `0x01`. Karena kita menggunakan **2 unit**, alamat salah satu harus diubah menjadi `0x02`.
+PZEM-016 memiliki alamat Modbus default `0x01`. Karena kita menggunakan **2 unit**, alamat salah satu harus diubah menjadi `0x02`.
 
 ### Metode 1: Menggunakan Software PC
 
 1. Siapkan **USB-to-RS485 converter**
-2. Hubungkan converter ke PZEM-017 pertama (yang akan diubah alamatnya) — **lepaskan PZEM-017 kedua dari bus**
-3. Jalankan software konfigurasi PZEM-017 (dari Peacefair atau tool Python pihak ketiga)
+2. Hubungkan converter ke PZEM-016 pertama (yang akan diubah alamatnya) — **lepaskan PZEM-016 kedua dari bus**
+3. Jalankan software konfigurasi PZEM-016 (dari Peacefair atau tool Python pihak ketiga)
 4. Ubah alamat dari `0x01` menjadi `0x02`
 5. Verifikasi perubahan
-6. Ulangi untuk PZEM-017 kedua jika perlu (pastikan kembali ke `0x01`)
+6. Ulangi untuk PZEM-016 kedua jika perlu (pastikan kembali ke `0x01`)
 
 ### Metode 2: Menggunakan ESP32 (Inisialisasi Satu Kali)
 
@@ -265,7 +265,7 @@ void setup() {
 void loop() {}
 ```
 
-> **PENTING:** Setelah mengubah alamat, beri label fisik pada PZEM-017 yang sudah diubah agar tidak tertukar.
+> **PENTING:** Setelah mengubah alamat, beri label fisik pada PZEM-016 yang sudah diubah agar tidak tertukar.
 
 ### Konfigurasi di Code
 
@@ -444,7 +444,15 @@ Dikirim setiap `send_delay` ms (default 5 detik).
   "v_out": 24.08,
   "i_out": 0.48,
   "p_out": 11.56,
+  "e_in": 0.05,
+  "freq_in": 49.98,
+  "pf_in": 0.85,
+  "v_out": 24.08,
+  "i_out": 0.48,
+  "p_out": 11.56,
   "e_out": 0.03,
+  "freq_out": 50.01,
+  "pf_out": 0.84,
   "input_valid": true,
   "output_valid": true
 }
@@ -456,10 +464,14 @@ Dikirim setiap `send_delay` ms (default 5 detik).
 | `i_in` | float | Ampere | Arus input |
 | `p_in` | float | Watt | Daya input |
 | `e_in` | float | Wh | Energi input (akumulasi) |
+| `freq_in` | float | Hz | Frekuensi input |
+| `pf_in` | float | - | Power factor input |
 | `v_out` | float | Volt | Tegangan output |
 | `i_out` | float | Ampere | Arus output |
 | `p_out` | float | Watt | Daya output |
 | `e_out` | float | Wh | Energi output (akumulasi) |
+| `freq_out` | float | Hz | Frekuensi output |
+| `pf_out` | float | - | Power factor output |
 | `input_valid` | bool | - | `true` jika Modbus sukses |
 | `output_valid` | bool | - | `true` jika Modbus sukses |
 
@@ -566,13 +578,13 @@ mosquitto_pub -h broker.hivemq.cloud -t "plc/relay/1/set" -m "ON"
 
 **Kriteria sukses:** Semua perintah merespon sesuai.
 
-### Tahap 3: Test PZEM-017 (Modbus)
+### Tahap 3: Test PZEM-016 (Modbus)
 
-**Tujuan:** Memastikan komunikasi Modbus dengan kedua PZEM-017 berhasil.
+**Tujuan:** Memastikan komunikasi Modbus dengan kedua PZEM-016 berhasil.
 
-**Prasyarat:** MAX485 sudah terhubung ke kedua PZEM-017.
+**Prasyarat:** MAX485 sudah terhubung ke kedua PZEM-016.
 
-1. Pastikan PZEM-017 mendapat power (12V dari sumber DC)
+1. Pastikan PZEM-016 mendapat power (12V dari sumber DC)
 2. Buka Serial Monitor
 3. Ketik `STATUS`
 4. Cek baris:
@@ -589,8 +601,8 @@ PZEM Input: (tidak terhubung)
 **Kemungkinan penyebab:**
 - MAX485 tidak terhubung ke bus RS485 dengan benar
 - Kabel A/B terbalik
-- Alamat PZEM-017 tidak sesuai (bukan 0x01 dan 0x02)
-- Power PZEM-017 tidak aktif
+- Alamat PZEM-016 tidak sesuai (bukan 0x01 dan 0x02)
+- Power PZEM-016 tidak aktif
 - Terminasi resistor 120Ω tidak dipasang (untuk jarak jauh)
 
 **Kriteria sukses:** Kedua PZEM menampilkan data yang valid.
@@ -755,7 +767,7 @@ ESP32 akan menyimpan dan menggunakan delay 3 detik.
 
 **Tujuan:** Simulasi skenario dunia nyata.
 
-1. Hubungkan beban (lampu DC / motor kecil) ke relay 1
+1. Hubungkan beban (lampu / motor kecil) ke relay 1
 2. Hubungkan PZEM input ke power supply 24V
 3. Hubungkan PZEM output ke beban via relay
 4. Nyalakan sistem
@@ -797,7 +809,7 @@ ESP32 akan menyimpan dan menggunakan delay 3 detik.
 | PZEM data tidak terbaca | Kabel A/B terbalik | Tukar kabel A dan B |
 | | Alamat salah | Cek alamat Modbus (harus 0x01 dan 0x02) |
 | | MAX485 tidak aktif | Pastikan VCC/GND terhubung dengan benar |
-| | Power PZEM mati | PZEM-017 butuh power 12V DC |
+| | Power PZEM mati | PZEM-016 butuh power 12V DC |
 | Relay tidak menyala | Relay active LOW | Program sudah handle, cek wiring VCC/GND |
 | | Power relay kurang | Relay 5V butuh supply terpisah |
 | Kontaktor tidak terbaca | Pull-up/down salah | Pastikan resistor 10kΩ terpasang |
@@ -907,7 +919,7 @@ Berikut ide pengembangan yang bisa ditambahkan:
 | **Email / Telegram Alert** | Notifikasi jika nilai melebihi threshold |
 | **Web Dashboard** | Interface web langsung dari ESP32 |
 | **Modbus TCP** | Selain Modbus RTU, dukung Modbus TCP via Ethernet |
-| **Multiple PZEM** | Dukung >2 PZEM-017 di bus yang sama |
+| **Multiple PZEM** | Dukung >2 PZEM-016 di bus yang sama |
 | **Kalibrasi** | Set offset untuk koreksi pembacaan |
 
 ### Skenario Lanjutan
@@ -925,4 +937,4 @@ Proyek ini bersifat open source. Silakan gunakan, modifikasi, dan distribusikan 
 
 ---
 
-> **Power Line Conditioner v1.0** — Dibuat dengan ESP32, PZEM-017, Modbus RTU, dan MQTT.
+> **Power Line Conditioner v1.0** — Dibuat dengan ESP32, PZEM-016, Modbus RTU, dan MQTT.
