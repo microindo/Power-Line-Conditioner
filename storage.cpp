@@ -6,13 +6,20 @@ AppConfig appConfig;
 void loadConfig() {
   prefs.begin("plc", false);
 
-  // default values
-  strcpy(appConfig.wifi_ssid, prefs.getString("wifi_ssid", "").c_str());
-  strcpy(appConfig.wifi_pass, prefs.getString("wifi_pass", "").c_str());
-  strcpy(appConfig.mqtt_host, prefs.getString("mqtt_host", "").c_str());
+  {
+    String tmp;
+    tmp = prefs.getString("wifi_ssid", "");
+    strcpy(appConfig.wifi_ssid, tmp.c_str());
+    tmp = prefs.getString("wifi_pass", "");
+    strcpy(appConfig.wifi_pass, tmp.c_str());
+    tmp = prefs.getString("mqtt_host", "");
+    strcpy(appConfig.mqtt_host, tmp.c_str());
+    tmp = prefs.getString("mqtt_user", "");
+    strcpy(appConfig.mqtt_user, tmp.c_str());
+    tmp = prefs.getString("mqtt_pass", "");
+    strcpy(appConfig.mqtt_pass, tmp.c_str());
+  }
   appConfig.mqtt_port = prefs.getUShort("mqtt_port", DEFAULT_MQTT_PORT);
-  strcpy(appConfig.mqtt_user, prefs.getString("mqtt_user", "").c_str());
-  strcpy(appConfig.mqtt_pass, prefs.getString("mqtt_pass", "").c_str());
   appConfig.send_delay = prefs.getUInt("send_delay", DEFAULT_SEND_DELAY);
 
   prefs.end();

@@ -117,8 +117,22 @@ void processSerial() {
         Serial.println("Konfigurasi tersimpan");
       }
       else if (strcmp(cmd, "RESET") == 0) {
-        resetConfig();
-        Serial.println("Konfigurasi direset ke default");
+        char arg[16] = {0};
+        sscanf(buffer, "%s %s", cmd, arg);
+        for (int i = 0; arg[i]; i++) arg[i] = toupper(arg[i]);
+
+        if (strcmp(arg, "FACTORY") == 0) {
+          Serial.println("FACTORY RESET...");
+          resetConfig();
+          for (int i = 0; i < 4; i++) setRelay(i, false);
+          Serial.println("Factory reset selesai. Restart...");
+          delay(500);
+          ESP.restart();
+        } else {
+          resetConfig();
+          Serial.println("Konfigurasi direset ke default");
+          Serial.println("Gunakan: RESET FACTORY untuk reset penuh + restart");
+        }
       }
       else if (strcmp(cmd, "RESTART") == 0) {
         Serial.println("Restart...");
@@ -153,6 +167,7 @@ static void printHelp() {
   Serial.println("SET RELAY <1-4> <0/1>     - Kontrol relay");
   Serial.println("SAVE                      - Simpan konfigurasi ke NVS");
   Serial.println("RESET                     - Reset konfigurasi ke default");
+  Serial.println("RESET FACTORY             - Factory reset + matikan relay + restart");
   Serial.println("RESTART                   - Restart ESP32");
   Serial.println();
 }

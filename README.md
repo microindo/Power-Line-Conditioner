@@ -391,6 +391,7 @@ MQTT: Terhubung
 | `STATUS` | Tampilkan semua konfigurasi, status, dan pembacaan sensor |
 | `SAVE` | Simpan konfigurasi ke NVS (tahan restart) |
 | `RESET` | Reset semua konfigurasi ke default |
+| `RESET FACTORY` | Factory reset + matikan semua relay + restart ESP32 |
 | `RESTART` | Restart ESP32 |
 
 ### Contoh Sesi Serial
